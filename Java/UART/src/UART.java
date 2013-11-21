@@ -109,9 +109,7 @@ public class UART {
 		//
 		os = new PrintStream(port.getOutputStream(), true);
 
-		sendShit("test", os);
-		
-		
+		sendString(os);
 		
 		OutputStream output = port.getOutputStream();
 		  
@@ -129,10 +127,26 @@ public class UART {
 		if (port != null) port.close();
 	}
 
-	public static void sendShit(String sendMe, PrintStream os) throws InterruptedException
+	public static void sendString(PrintStream os) throws InterruptedException
 	{
 		//os.print("!SCPSD\r\r");
 		//os.print(new char[]{'!', 'S', 'C', 'P', 'E', '\r', '\r'});
+		/*os.print('!');
+		Thread.sleep(10);
+		os.print('S');
+		Thread.sleep(10);
+		os.print('C');
+		Thread.sleep(10);
+		os.print('P');
+		Thread.sleep(10);
+		os.print('S');
+		Thread.sleep(10);
+		os.print('D');
+		Thread.sleep(10);
+		os.print('\r');
+		Thread.sleep(10);
+		os.print('\r');
+		Thread.sleep(10);
 		os.print('!');
 		Thread.sleep(10);
 		os.print('S');
@@ -156,5 +170,9 @@ public class UART {
 		os.print('D');
 		os.print('\r');
 		os.print('\r');*/
+		
+		os.write(13);
+		Thread.sleep(10);
+		os.write(13);
 	}
 }
