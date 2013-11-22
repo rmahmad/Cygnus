@@ -4,6 +4,10 @@ import java.util.*;
 import java.io.*;
 
 public class UART {
+	public static final int FRONT_LEFT = 8;
+	public static final int FRONT_RIGHT = 7;
+	public static final int BACK_LEFT = 15;
+	public static final int BACK_RIGHT = 0;
 
 	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
@@ -109,10 +113,15 @@ public class UART {
 		//
 		os = new PrintStream(port.getOutputStream(), true);
 
-		sendString(os);
+		init(os);
+		moveForward(os);
+		speedUp(os);
+		Thread.sleep(10000);
+		stop(os);
 		
-		OutputStream output = port.getOutputStream();
-		  
+		
+		//sendString(os);
+		
 		//
 		// Actual data communication would happen here
 		// performReadWriteCode();
@@ -171,13 +180,59 @@ public class UART {
 		os.print('\r');
 		os.print('\r');*/
 		
-		while(true) {
-			os.write(83);
-			Thread.sleep(10);
-			os.write(9);
-			Thread.sleep(10);
-		}
+		os.write('S');
+		Thread.sleep(10);
+		os.write(0);
+		Thread.sleep(10);
 		
-		
+	}
+	public static void moveForward(PrintStream os) throws InterruptedException {
+		os.write('F');
+		Thread.sleep(10);
+		os.write(8);
+		Thread.sleep(10);
+		os.write('F');
+		Thread.sleep(10);
+		os.write(15);
+		Thread.sleep(10);
+		os.write('B');
+		Thread.sleep(10);
+		os.write(0);
+		Thread.sleep(10);
+		os.write('B');
+		Thread.sleep(10);
+		os.write(7);
+		Thread.sleep(10);
+	}
+	
+	public static void init(PrintStream os) throws InterruptedException {
+		os.write('Z');
+	}
+	
+	public static void speedUp(PrintStream os) throws InterruptedException {
+		os.write('U');
+	}
+	
+	public static void speedDown(PrintStream os) throws InterruptedException {
+		os.write('D');
+	}
+	
+	public static void stop(PrintStream os) throws InterruptedException {
+		os.write('S');
+		Thread.sleep(10);
+		os.write(8);
+		Thread.sleep(10);
+		os.write('S');
+		Thread.sleep(10);
+		os.write(15);
+		Thread.sleep(10);
+		os.write('S');
+		Thread.sleep(10);
+		os.write(0);
+		Thread.sleep(10);
+		os.write('S');
+		Thread.sleep(10);
+		os.write(7);
+		Thread.sleep(10);
 	}
 }
