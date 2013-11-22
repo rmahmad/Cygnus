@@ -6,3 +6,6 @@
 .DS_Store?
 Thumbs.db
 .metadata
+
+# Classdata #
+*.classdata

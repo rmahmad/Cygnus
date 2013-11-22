@@ -171,8 +171,13 @@ public class UART {
 		os.print('\r');
 		os.print('\r');*/
 		
-		os.write(13);
-		Thread.sleep(10);
-		os.write(13);
+		while(true) {
+			os.write(83);
+			Thread.sleep(10);
+			os.write(9);
+			Thread.sleep(10);
+		}
+		
+		
 	}
 }
