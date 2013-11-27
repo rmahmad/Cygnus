@@ -114,10 +114,18 @@ public class UART {
 		os = new PrintStream(port.getOutputStream(), true);
 
 		init(os);
-		moveForward(os);
 		speedUp(os);
+		moveForward(os);
 		Thread.sleep(10000);
 		stop(os);
+		
+		/*os.write('Z');
+		Thread.sleep(10);
+		os.write('F');
+		Thread.sleep(10);
+		os.write(0);*/
+		
+		
 		
 		
 		//sendString(os);
