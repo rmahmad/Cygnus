@@ -7,8 +7,11 @@ import com.phidgets.*;
 
 class SonarSensor implements Runnable {
 	Thread t;
-	public SonarSensor() {
+	PrintStream os;
+	
+	public SonarSensor(PrintStream stream) {
 		t = new Thread(this, "Sensor Thread");
+		os = stream;
 		System.out.println("Sensor Thread running");
 		t.start();
 	}
@@ -25,15 +28,21 @@ class SonarSensor implements Runnable {
 	
 	public void pollSensors(int msec) throws PhidgetException, InterruptedException {
 		InterfaceKitPhidget phidget = new InterfaceKitPhidget();
-
 		phidget.open(327977);
 		phidget.waitForAttachment();
 		
 		while(true) {
 			System.out.println("Sensor 2: " + phidget.getSensorValue(2)*1.296 + " cm");
+			if(phidget.getSensorValue(2)*1.296 < 18) {
+				sendStop();
+			}
 			Thread.sleep(1000);
 		}
 	}
+	
+	public void sendStop() throws InterruptedException {
+		Core.stop(os);
+	} 
 	
 }
 
@@ -46,6 +55,8 @@ public class Core {
 	public static void main(String[] args) throws InterruptedException, IOException {
 		SerialPort port = initSerialPort("COM5");
 		PrintStream os = new PrintStream(port.getOutputStream(), true);
+		
+		new SonarSensor(os);
 		
 		try {
 			System.out.println("Motor controller thread running");
