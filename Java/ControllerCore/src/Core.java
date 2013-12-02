@@ -63,7 +63,14 @@ public class Core {
 			initRobot(os);
 			speedUp(os);
 			moveForward(os);
-			Thread.sleep(10000);
+			Thread.sleep(5000);
+			turnRight(os);
+			Thread.sleep(1000);
+			turnLeft(os);
+			Thread.sleep(1000);
+			moveBackward(os);
+			Thread.sleep(2000);
+			
 			stop(os);
 
 			if (os != null) os.close();
@@ -135,19 +142,23 @@ public class Core {
 		System.out.println("moving robot forward");
 		os.write('F');
 		Thread.sleep(10);
-		os.write(8);
+		os.write(BACK_LEFT);
+		Thread.sleep(10);
+		os.write('B');
+		Thread.sleep(10);
+		os.write(BACK_RIGHT);
+		Thread.sleep(10);
+	}
+	
+	public static void moveBackward(PrintStream os) throws InterruptedException {
+		System.out.println("moving robot backward");
+		os.write('B');
+		Thread.sleep(10);
+		os.write(BACK_LEFT);
 		Thread.sleep(10);
 		os.write('F');
 		Thread.sleep(10);
-		os.write(15);
-		Thread.sleep(10);
-		os.write('B');
-		Thread.sleep(10);
-		os.write(0);
-		Thread.sleep(10);
-		os.write('B');
-		Thread.sleep(10);
-		os.write(7);
+		os.write(BACK_RIGHT);
 		Thread.sleep(10);
 	}
 	
@@ -166,19 +177,33 @@ public class Core {
 	public static void stop(PrintStream os) throws InterruptedException {
 		os.write('S');
 		Thread.sleep(10);
-		os.write(8);
+		os.write(BACK_LEFT);
 		Thread.sleep(10);
 		os.write('S');
 		Thread.sleep(10);
-		os.write(15);
+		os.write(BACK_RIGHT);
 		Thread.sleep(10);
-		os.write('S');
+	}
+	
+	public static void turnRight(PrintStream os) throws InterruptedException {
+		os.write('F');
 		Thread.sleep(10);
-		os.write(0);
+		os.write(BACK_LEFT);
 		Thread.sleep(10);
-		os.write('S');
+		os.write('F');
 		Thread.sleep(10);
-		os.write(7);
+		os.write(BACK_RIGHT);
+		Thread.sleep(10);
+	}
+	
+	public static void turnLeft(PrintStream os) throws InterruptedException {
+		os.write('B');
+		Thread.sleep(10);
+		os.write(BACK_LEFT);
+		Thread.sleep(10);
+		os.write('B');
+		Thread.sleep(10);
+		os.write(BACK_RIGHT);
 		Thread.sleep(10);
 	}
 }
