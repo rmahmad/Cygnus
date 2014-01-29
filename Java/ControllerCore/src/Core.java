@@ -1,5 +1,5 @@
-import javax.comm.*;
-
+//import javax.comm.*;
+import gnu.io.*;
 import java.util.*;
 import java.io.*;
 
@@ -53,7 +53,7 @@ public class Core {
 	public static final int BACK_RIGHT = 0;
 
 	public static void main(String[] args) throws InterruptedException, IOException {
-		SerialPort port = initSerialPort("COM5");
+		SerialPort port = initSerialPort("/dev/ttyUSB0");
 		PrintStream os = new PrintStream(port.getOutputStream(), true);
 		
 		new SonarSensor(os);
