@@ -26,15 +26,62 @@ public class ConfigurationModule {
 	*	Constructor for creating from file
 	***************************************************/
 	ConfigurationModule(String filepath) throws IOException
-	{
+	{	
 		Scanner scan = new Scanner(new File(filepath)); // delimiter is newline char
-		while(scan.hasNext()) // still lines to read from file
+		boolean motor = false; 
+		boolean sensor = false;
+		
+		// parse line by line
+		while(scan.hasNext()) // still has lines to read from file
 		{
-			String parseMe = scan.next();
-			if(parseMe.contains("motors:"))
+			String parseMe = scan.next(); // string to parse from file
+			
+			// setting the flags for parsing
+			if(parseMe.contains("motors:")) // motor data is coming next line
 			{
-				//
+				sensor = false; // just in case.  The motor data should always be first
+				motor = true;
 			}
+			else if(parseMe.contains("sensors:")) // sensor data is coming next line
+			{
+				motor = false;
+				sensor = true;
+			}
+			
+			// create a motor
+			if(motor)
+			{
+				// parse drive
+				int index = parseMe.indexOf('\t');
+				String drive = parseMe.substring(0,index);
+				parseMe = parseMe.substring(index+1);
+				
+				// parse turn
+				index = parseMe.indexOf('\t');
+				String turn = parseMe.substring(0,index);
+				parseMe = parseMe.substring(index+1);
+				
+				// parse oriented
+				index = parseMe.indexOf('\t');
+				String oriented = parseMe.substring(0,index);
+				
+				// parse pinNumber
+				String pinNumber = parseMe.substring(index).trim();
+				
+				// convert the strings to the correct data types
+				boolean Drive = Boolean.valueOf(drive);
+				boolean Turn = Boolean.valueOf(turn);
+				int PinNumber = Integer.valueOf(pinNumber);
+				orientation Orient = orientation.valueOf(oriented);
+				
+				// add motor to ArrayList for ConfigModule 
+				this.motors.add(new Motor(Drive,Turn,Orient,PinNumber));
+			}
+				
+			else if(sensor) // creating sensors
+			{
+				// TODO once sensor objects are decided, create them from file here
+			}			
 		}
 	}
 	
