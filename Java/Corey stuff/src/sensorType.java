@@ -1,4 +1,4 @@
 
 public enum sensorType {
-	sonar,compass
+	sonar,compass,reflective
 }

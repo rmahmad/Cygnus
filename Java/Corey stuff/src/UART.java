@@ -146,10 +146,7 @@ public class UART {
 			os.print(sendArray[i]);
 			Thread.sleep(10);
 		}
-	}
-
-		
-	
+	}	
 
 	public void sendString(String sendMe)
 	{

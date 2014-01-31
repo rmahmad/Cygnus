@@ -4,8 +4,17 @@ public class Motor {
 	private boolean drive; // used to drive forward/back?
 	private boolean turn; // used to turn?
 	private orientation oriented;
-	public int pinNumber; // ERROR may not need
+	public int pinNumber;
 	
+	/********************************************************************
+	 * Description: Constructor for Motor class
+	 * 
+	 * Parameters:	drive - true if motor used in forward, backward driving
+	 * 		 		turn - true if motor used to turn robot
+	 * 		 		oriented - rotation direction when robot moves forward
+	 * 		 		pinNumber - pin number on Motor controller board that 
+	 * 							motor is plugged into
+	 *********************************************************************/
 	Motor(boolean drive, boolean turn, orientation oriented, int pinNumber)
 	{
 		this.drive = drive;
