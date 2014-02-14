@@ -1,9 +1,9 @@
 /*
- * The UART class is responsible for opening a serial communication port 
+ * The UART class is responsible for opening a serial communication port and giving the
+ * direct write statements to the motors.
  */
 
 import jssc.*;
-import java.io.*;
 
 public class UART {
 	public static final int FRONT_LEFT = 8;
@@ -16,11 +16,17 @@ public class UART {
 
 		SerialPort serialPort = initSerialPort("/dev/ttyUSB0");
 
+		String hm = "F\bB\r";
+		
 		initRobot(serialPort);
 		speedUp(serialPort);
-		moveForward(serialPort);
+		speedUp(serialPort);
+		//moveForward(serialPort);
+		sendString(serialPort, hm);
 		Thread.sleep(5000);
 		stop(serialPort);
+		
+		
 		
 		closeSerialPort(serialPort);
 	}
@@ -50,13 +56,13 @@ public class UART {
 		port.closePort();
 	}
 
-	public static void sendString(PrintStream os, String sendMe) throws InterruptedException
+	public static void sendString(SerialPort port, String sendMe) throws InterruptedException, SerialPortException
 	{
 		char[] sendArray = sendMe.toCharArray();
-
+		
 		for(int i = 0; i < sendMe.length(); i++)
 		{
-			os.print(sendArray[i]);
+			port.writeInt((int) sendArray[i]);
 			Thread.sleep(10);
 		}
 	}	
