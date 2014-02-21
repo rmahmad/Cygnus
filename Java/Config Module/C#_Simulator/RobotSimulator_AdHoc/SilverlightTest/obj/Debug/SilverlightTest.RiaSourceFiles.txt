@@ -1,0 +1,1 @@
+C:\Users\idama_000\Documents\GitHub\robotsimulator\C#_Simulator\RobotSimulator_AdHoc\SilverlightTest.Web\SilverlightTest.Web.csproj,635279685612276790,Properties\AssemblyInfo.cs,
