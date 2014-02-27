@@ -11,23 +11,33 @@ import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-import robotinterpreter.RobotListener;
+import jssc.SerialPortException;
+
+//import robotinterpreter.RobotListener;
 
 
-public class ConfigurationModule implements RobotListener {
+public class ConfigurationModule /*implements RobotListener*/ {
 	
-	private ArrayList<Motor> motors = new ArrayList<Motor>();
-	private ArrayList<Sensor> sensors = new ArrayList<Sensor>();
+	private static ArrayList<Motor> motors = new ArrayList<Motor>();
+	private static ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 	private UART comms = new UART();
+	
+	public static void main(String args[]) throws InterruptedException, SerialPortException {
+		ConfigurationModule config = new ConfigurationModule(motors, sensors);
+		config.initConfig();
+		
+	}
 	
 	/*******************************************************************************
 	*	Constructor for Robot.  Call this from the interpreter
+	 * @throws SerialPortException 
+	 * @throws InterruptedException 
 	*******************************************************************************/
-	ConfigurationModule(ArrayList<Motor> motors, ArrayList<Sensor> sensors)
+	ConfigurationModule(ArrayList<Motor> motors, ArrayList<Sensor> sensors) throws InterruptedException, SerialPortException
 	{
 		this.motors = motors;
 		this.sensors = sensors;
-		init();
+		initConfig();
 	}
 
 //******************************************** FILE I/O SECTION ***********************************************************
@@ -81,7 +91,7 @@ public class ConfigurationModule implements RobotListener {
 				// convert the strings to the correct data types
 				boolean Drive = Boolean.valueOf(drive);
 				boolean Turn = Boolean.valueOf(turn);
-				int PinNumber = Integer.valueOf(pinNumber);
+				String PinNumber = String.valueOf(pinNumber);
 				orientation Orient = orientation.valueOf(oriented);
 				
 				// add motor to ArrayList for ConfigModule 
@@ -129,17 +139,22 @@ public class ConfigurationModule implements RobotListener {
 	
 	
 	/***************************************************
-	*	Initializes the ConfigurationModule
+	 *	Initializes the ConfigurationModule
+	 * @throws SerialPortException 
+	 * @throws InterruptedException 
 	***************************************************/
-	private void init()
+	public void initConfig() throws InterruptedException, SerialPortException
 	{
 		// initialize motors
-		comms.sendString("!SCPE/r/r");
+		comms.initUart();
 		
-		for(int i = 0; motors.get(i) != null; i++)
+		motors.add(new Motor(true, false, orientation.clockwise, "\b"));
+		motors.add(new Motor(true, false, orientation.counterclockwise, "\r"));
+		
+		/*for(int i = 0; motors.get(i) != null; i++)
 		{
 			comms.sendString(motors.get(i).Stop()); // stops the motors after initialization
-		}
+		}*/
 
 		// initialize sensors TODO
 		
@@ -163,8 +178,10 @@ public class ConfigurationModule implements RobotListener {
 	
 	/***************************************************************
 	*	Description: Moves the robot forward indefinitely
+	 * @throws SerialPortException 
+	 * @throws InterruptedException 
 	***************************************************************/
-	public void driveForward()
+	public void driveForward() throws InterruptedException, SerialPortException
 	{
 		for(int i = 0; motors.get(i) != null; i++)
 		{
@@ -174,8 +191,10 @@ public class ConfigurationModule implements RobotListener {
 	
 	/***************************************************************
 	*	Description: Moves the robot forward a specified distance 
+	 * @throws SerialPortException 
+	 * @throws InterruptedException 
 	***************************************************************/
-	public void driveForward(int distance) // TODO how do we want distance measured?
+	public void driveForward(int distance) throws InterruptedException, SerialPortException // TODO how do we want distance measured?
 	{
 		for(int i = 0; motors.get(i) != null; i++)
 		{
@@ -192,8 +211,10 @@ public class ConfigurationModule implements RobotListener {
 	/***************************************************************
 	*	Description: Moves the robot forward a specified distance or
 	*				 time
+	 * @throws SerialPortException 
+	 * @throws InterruptedException 
 	***************************************************************/
-	public void driveForward(int length, boolean time) // TODO how do we want distance or time measured?
+	public void driveForward(int length, boolean time) throws InterruptedException, SerialPortException // TODO how do we want distance or time measured?
 	{
 		for(int i = 0; motors.get(i) != null; i++)
 		{
@@ -220,8 +241,10 @@ public class ConfigurationModule implements RobotListener {
 	
 	/***************************************************************
 	*	Description: Moves the robot backward indefinitely
+	 * @throws SerialPortException 
+	 * @throws InterruptedException 
 	***************************************************************/
-	public void driveBackwards()
+	public void driveBackwards() throws InterruptedException, SerialPortException
 	{
 		for(int i = 0; motors.get(i) != null; i++)
 		{
@@ -232,8 +255,10 @@ public class ConfigurationModule implements RobotListener {
 	/***************************************************************
 	*	Description: Moves the robot backward by a provided distance
 	*				 or time
+	 * @throws SerialPortException 
+	 * @throws InterruptedException 
 	***************************************************************/
-	public void driveBackwards(int length, boolean time)
+	public void driveBackwards(int length, boolean time) throws InterruptedException, SerialPortException
 	{
 		for(int i = 0; motors.get(i) != null; i++)
 		{
@@ -258,7 +283,7 @@ public class ConfigurationModule implements RobotListener {
 		}
 	}
 	
-	public void turnLeft()
+	public void turnLeft() throws InterruptedException, SerialPortException
 	{
 		for(int i = 0; motors.get(i) != null; i++)
 		{					
@@ -266,7 +291,7 @@ public class ConfigurationModule implements RobotListener {
 		}
 	}
 	
-	public void turnRight()
+	public void turnRight() throws InterruptedException, SerialPortException
 	{
 		for(int i = 0; motors.get(i) != null; i++)
 		{					
@@ -274,7 +299,7 @@ public class ConfigurationModule implements RobotListener {
 		}
 	}
 	
-	public void stop()
+	public void stop() throws InterruptedException, SerialPortException
 	{
 		for(int i = 0; motors.get(i) != null; i++)
 		{					
@@ -298,7 +323,7 @@ public class ConfigurationModule implements RobotListener {
 	// positive forward neg back driveForward(dist);
 	// TODO this is a sample of how we would use it depending upon how the sensor is used and what
 	//		values are recieved from reading.  Could implement this another way.  need to test first
-	public void driveDistance(int dist)
+	public void driveDistance(int dist) throws InterruptedException, SerialPortException
 	{
 		// decide whether to drive forward or back
 		if(dist > 0) // drive forward
@@ -354,7 +379,7 @@ public class ConfigurationModule implements RobotListener {
 	}
 	
 	// pos angle right , neg left
-	public void turnAngle(int angle)
+	public void turnAngle(int angle) throws InterruptedException, SerialPortException
 	{
 		if (angle > 0)
 		{
@@ -407,8 +432,10 @@ public class ConfigurationModule implements RobotListener {
 	*			facing the y axis at 90 degrees.  To turn 90 degrees 
 	*			to the right, supply a value of '0' or '360' for 
 	*			parameter 'degrees'
+	 * @throws SerialPortException 
+	 * @throws InterruptedException 
 	***************************************************************/
-	public void Turn(int degrees)
+	public void Turn(int degrees) throws InterruptedException, SerialPortException
 	{
 		// deciding which direction the wheels need to turn
 		if(degrees > 90) 

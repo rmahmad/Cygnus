@@ -8,7 +8,7 @@ public class Motor {
 	private boolean drive; // used to drive forward/back?
 	private boolean turn; // used to turn?
 	private orientation oriented;
-	public int pinNumber;
+	public String pinNumber;
 	
 	/********************************************************************
 	 * Description: Constructor for Motor class
@@ -19,7 +19,7 @@ public class Motor {
 	 * 		 		pinNumber - pin number on Motor controller board that 
 	 * 							motor is plugged into
 	 *********************************************************************/
-	Motor(boolean drive, boolean turn, orientation oriented, int pinNumber)
+	Motor(boolean drive, boolean turn, orientation oriented, String pinNumber)
 	{
 		this.drive = drive;
 		this.turn = turn;
