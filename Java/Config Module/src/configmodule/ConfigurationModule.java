@@ -20,11 +20,11 @@ public class ConfigurationModule /*implements RobotListener*/ {
 	
 	private static ArrayList<Motor> motors = new ArrayList<Motor>();
 	private static ArrayList<Sensor> sensors = new ArrayList<Sensor>();
-	private UART comms = new UART();
+	private static UART comms = new UART();
 	
 	public static void main(String args[]) throws InterruptedException, SerialPortException {
-		ConfigurationModule config = new ConfigurationModule(motors, sensors);
-		config.initConfig();
+		//ConfigurationModule config = new ConfigurationModule(motors, sensors);
+		initConfig();
 		
 	}
 	
@@ -143,7 +143,7 @@ public class ConfigurationModule /*implements RobotListener*/ {
 	 * @throws SerialPortException 
 	 * @throws InterruptedException 
 	***************************************************/
-	public void initConfig() throws InterruptedException, SerialPortException
+	public static void initConfig() throws InterruptedException, SerialPortException
 	{
 		// initialize motors
 		comms.initUart();
