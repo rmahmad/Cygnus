@@ -12,7 +12,6 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 import jssc.SerialPortException;
-
 //import robotinterpreter.RobotListener;
 
 
@@ -25,7 +24,11 @@ public class ConfigurationModule /*implements RobotListener*/ {
 	public static void main(String args[]) throws InterruptedException, SerialPortException {
 		//ConfigurationModule config = new ConfigurationModule(motors, sensors);
 		initConfig();
-		
+		driveForward();
+		//test();
+		Thread.sleep(5000);
+		comms.stop();
+		comms.closeSerialPort();
 	}
 	
 	/*******************************************************************************
@@ -181,11 +184,12 @@ public class ConfigurationModule /*implements RobotListener*/ {
 	 * @throws SerialPortException 
 	 * @throws InterruptedException 
 	***************************************************************/
-	public void driveForward() throws InterruptedException, SerialPortException
+	public static void driveForward() throws InterruptedException, SerialPortException
 	{
-		for(int i = 0; motors.get(i) != null; i++)
+		for(int i = 0; i < motors.size(); i++)
 		{
 			comms.sendString(motors.get(i).Forward());
+			System.out.println(motors.get(i).Forward());
 		}
 	}
 	

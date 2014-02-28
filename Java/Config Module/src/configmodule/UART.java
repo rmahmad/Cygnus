@@ -24,7 +24,7 @@ public class UART {
 		
 		initRobot();
 		speedUp();
-		speedUp();
+		/*speedUp();
 		sendString(hm);
 		Thread.sleep(1000);
 		sendString(back);
@@ -33,7 +33,7 @@ public class UART {
 		
 		
 		
-		closeSerialPort();
+		closeSerialPort();*/
 	}
 
 	private static SerialPort initSerialPort(String wantedPortName)
