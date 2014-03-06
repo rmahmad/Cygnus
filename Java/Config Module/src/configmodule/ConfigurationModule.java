@@ -20,27 +20,19 @@ public class ConfigurationModule implements RobotListener {
 	private static ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 	private static UART comms = new UART();
 
-	public static void main(String args[]) throws InterruptedException,
-			SerialPortException {
-		// ConfigurationModule config = new ConfigurationModule(motors,
-		// sensors);
-		//initConfig();
-		//comms.moveForward();
-		// driveForward();
-		 test();
-	 //Thread.sleep(5000);
-		// comms.stop();
-		//comms.closeSerialPort();
-	}
-
 	public static void test() throws InterruptedException, SerialPortException {
-		ConfigurationModule config = new ConfigurationModule(motors, sensors);
-		initConfig();
+		ConfigurationModule config = new ConfigurationModule();
+		/*config.driveBackwards();
+		Thread.sleep(1000);
+		config.stop();
+		Thread.sleep(1000);
 		config.driveForward();
-		//comms.moveForward();
-		Thread.sleep(5000);
-		comms.stop();
-		comms.closeSerialPort();
+		Thread.sleep(1000);
+		config.turnLeft();
+		Thread.sleep(1000);
+		config.turnRight();
+		Thread.sleep(1000);
+		comms.closeSerialPort();*/
 	}
 
 	/*******************************************************************************
@@ -49,11 +41,9 @@ public class ConfigurationModule implements RobotListener {
 	 * @throws SerialPortException
 	 * @throws InterruptedException
 	 *******************************************************************************/
-	ConfigurationModule(ArrayList<Motor> motors, ArrayList<Sensor> sensors)
-			throws InterruptedException, SerialPortException {
-		this.motors = motors;
-		this.sensors = sensors;
-		//initConfig();
+	ConfigurationModule() throws InterruptedException, SerialPortException {
+		//UART.closeSerialPort();
+		initConfig();
 	}
 
 	// ******************************************** FILE I/O SECTION
@@ -167,8 +157,8 @@ public class ConfigurationModule implements RobotListener {
 		// initialize motors
 		comms.initUart();
 
-		motors.add(new Motor(true, false, orientation.clockwise, "\b"));
-		motors.add(new Motor(true, false, orientation.counterclockwise, "\r"));
+		motors.add(new Motor(true, true, orientation.clockwise, "\b"));
+		motors.add(new Motor(true, true, orientation.counterclockwise, "\r"));
 
 		/*
 		 * for(int i = 0; motors.get(i) != null; i++) {
@@ -201,14 +191,11 @@ public class ConfigurationModule implements RobotListener {
 		try {
 			for (int i = 0; i < motors.size(); i++) {
 				comms.sendString(motors.get(i).Forward());
-				System.out.println(motors.get(i).Forward());
 			}
-		} catch (InterruptedException i) {
-			//throw new InterruptedException();
-			System.err.println("GG BRAH");
-		} catch (SerialPortException s) {
-			//throw new SerialPortException();
-			System.err.println("GG BRAH");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (SerialPortException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -268,10 +255,15 @@ public class ConfigurationModule implements RobotListener {
 	 * @throws SerialPortException
 	 * @throws InterruptedException
 	 ***************************************************************/
-	public void driveBackwards() throws InterruptedException,
-			SerialPortException {
-		for (int i = 0; motors.get(i) != null; i++) {
-			comms.sendString(motors.get(i).Backward());
+	public void driveBackwards() {
+		for (int i = 0; i < motors.size(); i++) {
+			try {
+				comms.sendString(motors.get(i).Backward());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (SerialPortException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -302,21 +294,39 @@ public class ConfigurationModule implements RobotListener {
 		}
 	}
 
-	public void turnLeft() throws InterruptedException, SerialPortException {
-		for (int i = 0; motors.get(i) != null; i++) {
-			comms.sendString(motors.get(i).Left());
+	public void turnLeft() {
+		for (int i = 0; i < motors.size(); i++) {
+			try {
+				comms.sendString(motors.get(i).Left());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (SerialPortException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
-	public void turnRight() throws InterruptedException, SerialPortException {
-		for (int i = 0; motors.get(i) != null; i++) {
-			comms.sendString(motors.get(i).Right());
+	public void turnRight() {
+		for (int i = 0; i < motors.size(); i++) {
+			try {
+				comms.sendString(motors.get(i).Right());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (SerialPortException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
-	public void stop() throws InterruptedException, SerialPortException {
-		for (int i = 0; motors.get(i) != null; i++) {
-			comms.sendString(motors.get(i).Stop());
+	public void stop() {
+		for (int i = 0; i < motors.size(); i++) {
+			try {
+				comms.sendString(motors.get(i).Stop());
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (SerialPortException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

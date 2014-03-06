@@ -19,21 +19,11 @@ public class UART {
 
 		serialPort = initSerialPort("/dev/ttyUSB0");
 
-		String hm = "F\bB\r";
-		String back = "F\rB\b";
+		//String hm = "F\bB\r";
+		//String back = "F\rB\b";
 		
 		initRobot();
 		speedUp();
-		/*speedUp();
-		sendString(hm);
-		Thread.sleep(1000);
-		sendString(back);
-		Thread.sleep(5000);
-		stop();
-		
-		
-		
-		closeSerialPort();*/
 	}
 
 	private static SerialPort initSerialPort(String wantedPortName)

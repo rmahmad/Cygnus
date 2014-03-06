@@ -94,7 +94,7 @@ public class Motor {
 			}
 			else
 			{
-				return ("B" + this.pinNumber);
+				return ("F" + this.pinNumber);
 			}
 		}
 		else // do nothing for turning right
@@ -114,7 +114,7 @@ public class Motor {
 			}
 			else
 			{
-				return ("F" + this.pinNumber);
+				return ("B" + this.pinNumber);
 			}
 		}
 		else // do nothing for turning left
