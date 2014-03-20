@@ -1,3 +1,5 @@
 {
 	method drive ( string "b" );
+	waitfor 2;
+	method drive ( string "f" );
 }

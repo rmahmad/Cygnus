@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import com.phidgets.PhidgetException;
+
 import robotinterpreter.RobotInterpreter;
 import jssc.SerialPortException;
 
 public class BootStrapper {
 
-	public static void main(String args[]) throws InterruptedException, SerialPortException, IOException {
+	public static void main(String args[]) throws InterruptedException, SerialPortException, IOException, PhidgetException {
 		ConfigurationModule config = new ConfigurationModule();
 		RobotInterpreter r = new RobotInterpreter();
 		

@@ -11,6 +11,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+import com.phidgets.PhidgetException;
+
 import jssc.SerialPortException;
 import robotinterpreter.RobotListener;
 
@@ -20,31 +22,14 @@ public class ConfigurationModule implements RobotListener {
 	private static ArrayList<Sensor> sensors = new ArrayList<Sensor>();
 	private static UART comms = new UART();
 
-	public static void test() throws InterruptedException, SerialPortException {
+	ConfigurationModule() throws InterruptedException, SerialPortException, PhidgetException {
+		initConfig();
+	}	
+	
+	public static void test() throws InterruptedException, SerialPortException, PhidgetException {
 		ConfigurationModule config = new ConfigurationModule();
-		/*config.driveBackwards();
-		Thread.sleep(1000);
-		config.stop();
-		Thread.sleep(1000);
-		config.driveForward();
-		Thread.sleep(1000);
-		config.turnLeft();
-		Thread.sleep(1000);
-		config.turnRight();
-		Thread.sleep(1000);
-		comms.closeSerialPort();*/
 	}
 
-	/*******************************************************************************
-	 * Constructor for Robot. Call this from the interpreter
-	 * 
-	 * @throws SerialPortException
-	 * @throws InterruptedException
-	 *******************************************************************************/
-	ConfigurationModule() throws InterruptedException, SerialPortException {
-		//UART.closeSerialPort();
-		initConfig();
-	}
 
 	// ******************************************** FILE I/O SECTION
 	// ***********************************************************
@@ -151,23 +136,21 @@ public class ConfigurationModule implements RobotListener {
 	 * 
 	 * @throws SerialPortException
 	 * @throws InterruptedException
+	 * @throws PhidgetException 
 	 ***************************************************/
 	public static void initConfig() throws InterruptedException,
-			SerialPortException {
-		// initialize motors
+			SerialPortException, PhidgetException {
 		comms.initUart();
 
 		motors.add(new Motor(true, true, orientation.clockwise, "\b"));
 		motors.add(new Motor(true, true, orientation.counterclockwise, "\r"));
 
+		//sensors.add(new Sensor(sensorType.sonar, 0, 327977, 18, 2));
 		/*
 		 * for(int i = 0; motors.get(i) != null; i++) {
 		 * comms.sendString(motors.get(i).Stop()); // stops the motors after
 		 * initialization }
 		 */
-
-		// initialize sensors TODO
-
 	}
 
 	// ********************* ROBOT LISTENER REQUIRED METHODS FROM IMPLEMENTING
@@ -345,8 +328,7 @@ public class ConfigurationModule implements RobotListener {
 	// sensor is used and what
 	// values are recieved from reading. Could implement this another way. need
 	// to test first
-	public void driveDistance(int dist) throws InterruptedException,
-			SerialPortException {
+	public void driveDistance(int dist) {
 		// decide whether to drive forward or back
 		if (dist > 0) // drive forward
 		{
@@ -355,19 +337,31 @@ public class ConfigurationModule implements RobotListener {
 			int start = getSonarData(placeHolder);
 
 			// begin moving forward
-			for (int i = 0; motors.get(i) != null; i++) {
-				comms.sendString(motors.get(i).Forward());
+			for (int i = 0; i < motors.size(); i++) {
+				try {
+					comms.sendString(motors.get(i).Forward());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (SerialPortException e) {
+					e.printStackTrace();
+				}
 			}
 
 			// wait until robot has moved 'dist' forward
 			int travelled = 0;
 			while (travelled < dist) {
-				travelled = getSonarData(placeHolder) - start;
+				travelled = start - getSonarData(placeHolder);
 			}
 
 			// stop moving forward
-			for (int i = 0; motors.get(i) != null; i++) {
-				comms.sendString(motors.get(i).Stop());
+			for (int i = 0; i < motors.size(); i++) {
+				try {
+					comms.sendString(motors.get(i).Stop());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (SerialPortException e) {
+					e.printStackTrace();
+				}
 			}
 		} else if (dist < 0) {
 			// get position before moving backward
@@ -375,33 +369,50 @@ public class ConfigurationModule implements RobotListener {
 			int start = getSonarData(placeHolder);
 
 			// begin moving backward
-			for (int i = 0; motors.get(i) != null; i++) {
-				comms.sendString(motors.get(i).Backward());
+			for (int i = 0; i < motors.size(); i++) {
+				try {
+					comms.sendString(motors.get(i).Backward());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (SerialPortException e) {
+					e.printStackTrace();
+				}
 			}
 
 			// wait until robot has moved 'dist' backward
 			int travelled = 0;
 			while (travelled > dist) {
-				travelled = getSonarData(placeHolder) - start;
+				travelled = start - getSonarData(placeHolder);
 			}
 
 			// stop moving backward
-			for (int i = 0; motors.get(i) != null; i++) {
-				comms.sendString(motors.get(i).Stop());
+			for (int i = 0; i < motors.size(); i++) {
+				try {
+					comms.sendString(motors.get(i).Stop());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (SerialPortException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
 	// pos angle right , neg left
-	public void turnAngle(int angle) throws InterruptedException,
-			SerialPortException {
+	public void turnAngle(int angle) {
 		if (angle > 0) {
 			// get start bearing angle
 			int bearing = getBearing();
 
 			// begin turning right
-			for (int i = 0; motors.get(i) != null; i++) {
-				comms.sendString(motors.get(i).Right());
+			for (int i = 0; i < motors.size(); i++) {
+				try {
+					comms.sendString(motors.get(i).Right());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (SerialPortException e) {
+					e.printStackTrace();
+				}
 			}
 
 			// decide when to stop turning
@@ -414,8 +425,14 @@ public class ConfigurationModule implements RobotListener {
 			}
 
 			// stop turning
-			for (int i = 0; motors.get(i) != null; i++) {
-				comms.sendString(motors.get(i).Stop());
+			for (int i = 0; i < motors.size(); i++) {
+				try {
+					comms.sendString(motors.get(i).Stop());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (SerialPortException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 

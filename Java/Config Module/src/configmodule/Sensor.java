@@ -19,6 +19,7 @@ public class Sensor {
 	{
 		this.type = type;
 		this.orientationDegree = orientationDegree;
+		this.threshold = threshold;
 		this.port = port;
 		this.phidget = new InterfaceKitPhidget();
 		this.phidget.open(serial);
