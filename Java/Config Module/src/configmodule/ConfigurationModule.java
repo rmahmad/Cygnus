@@ -16,6 +16,50 @@ import com.phidgets.PhidgetException;
 import jssc.SerialPortException;
 import robotinterpreter.RobotListener;
 
+class Sensors implements Runnable {
+
+	Thread t;
+	private ArrayList<Motor> motors;
+	private ArrayList<Sensor> sensors;
+	private UART comms;
+	
+	public Sensors(ArrayList<Sensor> sensors, ArrayList<Motor> motors, UART comms) {
+		this.sensors = sensors;
+		this.motors = motors;
+		this.comms = comms;
+		t = new Thread(this, "Sensor Thread");
+		t.start();
+	}
+	
+	@Override
+	public void run() {
+		while (true) {
+			for(int i = 0; i < this.sensors.size(); i++) {
+				try {
+					if(sensors.get(i).pollSensor() == -1) {
+						for (int j = 0; j < motors.size(); j++) {
+							try {
+								comms.sendString(motors.get(j).Stop());
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							} catch (SerialPortException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				} catch (PhidgetException e) {
+					e.printStackTrace();
+				}
+			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}
+
 public class ConfigurationModule implements RobotListener {
 
 	private static ArrayList<Motor> motors = new ArrayList<Motor>();
@@ -145,12 +189,9 @@ public class ConfigurationModule implements RobotListener {
 		motors.add(new Motor(true, true, orientation.clockwise, "\b"));
 		motors.add(new Motor(true, true, orientation.counterclockwise, "\r"));
 
-		//sensors.add(new Sensor(sensorType.sonar, 0, 327977, 18, 2));
-		/*
-		 * for(int i = 0; motors.get(i) != null; i++) {
-		 * comms.sendString(motors.get(i).Stop()); // stops the motors after
-		 * initialization }
-		 */
+		sensors.add(new Sensor(sensorType.sonar, 0, 327977, 18, 2));
+		new Sensors(sensors, motors, comms);
+		
 	}
 
 	// ********************* ROBOT LISTENER REQUIRED METHODS FROM IMPLEMENTING
